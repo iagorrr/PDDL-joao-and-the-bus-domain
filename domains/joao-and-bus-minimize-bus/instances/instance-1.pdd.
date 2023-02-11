@@ -1,0 +1,31 @@
+; Simple instance.
+(define (problem foo) (:domain onibus-joao)
+(:objects 
+    s1 s2 s3 s4 - stop
+    b1 - bus
+    p1 - person
+)
+
+(:init
+	(= (road-length s1 s2) 10)
+	(= (road-length s2 s3) 20)
+	(= (road-length s3 s4) 15)
+	(= (road-length s4 s1) 5)
+	(= (time-person) 40)
+	(= (time-bus b1) 0)
+	(= (total) 0)
+    (at b1 s1)
+    (at p1 s1)
+    (connect b1 s1 s2)
+    (connect b1 s2 s3)
+    (connect b1 s3 s4)
+    (connect b1 s4 s1)
+)
+
+(:goal (and
+    (at p1 s3)
+))
+
+(:metric minimize (total))
+)
+
