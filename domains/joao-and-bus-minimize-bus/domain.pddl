@@ -1,50 +1,46 @@
-(define (domain onibus-joao)
+(define (domain joao-and-the-bus)
 	(:requirements :typing :equality :fluents :durative-actions)
 	(:types
 		bus person - movable
 		stop - locale
 	)
-
 	(:functions
-		(total)
-		
-	(time-person)
-		(road-length ?l1 ?l2 - locale)
-		(bus-cycle ?b)
-		(time-bus ?b)
+		(total-cost)
+		(time-person)
+		(road-length ?l1 ?l2 - locale ?b - bus)
+		(time-bus ?b - bus)
 	)
 
 	(:predicates
 		(at ?m - movable ?l - locale)
-		(connect ?b - bus ?l1 ?l2 - stop)
+		(connect ?l1 ?l2 - stop ?b - bus)
 	)
-
 	(:action pick-bus
 		:parameters (?p - person ?b - bus ?l1 ?l2 - stop)
-		:precondition (and 
+		:precondition (and
 			(at ?p ?l1)
 			(at ?b ?l1)
-			(connect ?b ?l1 ?l2)
+			(connect ?l1 ?l2 ?b)
 			(<= (time-person) (time-bus ?b))
 		)
 		:effect (and
 			(not (at ?p ?l1))
 			(at ?p ?l2)
-			(increase (time-bus ?b) (road-length ?l1 ?l2))
+			(increase (time-bus ?b) (road-length ?l1 ?l2 ?b))
 			(assign (time-person) (time-bus ?b))
 			(not (at ?b ?l1))
 			(at ?b ?l2)
-			(increase (total) 1)
+			(increase (total-cost) 1)
 		)
 	)
 	(:action drive
 		:parameters (?b - bus ?l1 ?l2 - stop)
-		:precondition (and 
-			(connect ?b ?l1 ?l2)
+		:precondition (and
+			(connect ?l1 ?l2 ?b)
 			(at ?b ?l1)
 		)
 		:effect (and
-			(increase (time-bus ?b) (road-length ?l1 ?l2))
+			(increase (time-bus ?b) (road-length ?l1 ?l2 ?b))
 			(not (at ?b ?l1))
 			(at ?b ?l2)
 		)
