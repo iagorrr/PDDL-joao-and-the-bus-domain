@@ -30,7 +30,10 @@ template = """(define (problem {problem_name}) (:domain joao-and-the-bus)
 )
 
 (:goal (and
-    (at p1 {person_end_pos})
+    (at p1 s{person_end_pos})
+    (forall (?b - bus)
+        (not (in-bus ?b))
+    )
 ))
 
 (:metric minimize (total-cost))
@@ -82,8 +85,8 @@ def generate_problem() -> str:
 
     return template.format(
         problem_name=problem_name,
-        stops=', '.join(f's{loc}' for loc in all_locations),
-        buses=', '.join(f'b{bus}' for bus in buses),
+        stops=' '.join(f's{loc}' for loc in all_locations),
+        buses=' '.join(f'b{bus}' for bus in buses),
         time_person=person[-1],
         person_start_pos=person[0],
         person_end_pos=person[1],
