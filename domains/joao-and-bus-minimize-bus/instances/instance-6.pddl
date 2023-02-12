@@ -32,6 +32,9 @@
 )
 (:goal (and
     (at p1 s5)
+    (forall (?b - bus)
+        (not (in-bus ?b))
+    )
 ))
 (:metric minimize (total-cost))
 )
