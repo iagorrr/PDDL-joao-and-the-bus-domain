@@ -40,6 +40,7 @@ template = """(define (problem {problem_name}) (:domain joao-and-the-bus)
 )
 
 """
+import os
 import graphviz
 
 def main():
@@ -59,17 +60,21 @@ def generate_problem() -> str:
     graph = graphviz.Digraph(problem_name)
 
     # person start and end location.
-    graph.node(str(person[0]), f'{person[0]} s')
-    graph.node(str(person[1]), f'{person[1]} e')
-    stops.add(person[1])
-    stops.add(person[0])
-    
+    nodes = {person[0]: ['s'], person[1]: ['e']}
     
     while(True):
         bus, *rest = map(int, input().split())
         if bus == -1:
             break
         buses[bus] = rest
+
+        if rest[0] not in nodes:
+            nodes[rest[0]] = []
+        nodes[rest[0]].append(f'b{bus}')
+
+    for name, labels in nodes.items():
+        graph.node(str(name), f'{name} {",".join(labels)}')
+        stops.add(name)
 
     definitions = {}
     while(True):
@@ -99,7 +104,8 @@ def generate_problem() -> str:
         for location in connection[:2]
     }
     
-    graph.render(outfile=f'../../instances/{problem_name}.pdf')
+    problem_filename = os.path.join(os.path.dirname(__file__), '..', '..', 'instances', f'{problem_name}.pdf')
+    graph.render(outfile=problem_filename)
 
     return template.format(
         problem_name=problem_name,
