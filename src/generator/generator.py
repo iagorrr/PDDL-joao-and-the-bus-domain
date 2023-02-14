@@ -44,9 +44,11 @@ import os
 import graphviz
 
 def main():
-    generate_problem()
+    fn, pddl = generate_problem()
+    with open(fn[:-2] + 'ddl', 'w') as f:
+        f.write(pddl)
 
-def generate_problem() -> str:
+def generate_problem() -> tuple[str, str]:
     colors = ['black', 'red', 'blue', 'purple', 'yellow', 'fuchsia', 'crismon', 'aqua', 'orange', 'darkgreen', 'darkmagenta']
 
     problem_name = input()
@@ -107,7 +109,7 @@ def generate_problem() -> str:
     problem_filename = os.path.join(os.path.dirname(__file__), '..', '..', 'instances', f'{problem_name}.pdf')
     graph.render(outfile=problem_filename)
 
-    return template.format(
+    return problem_filename, template.format(
         problem_name=problem_name,
         stops=' '.join(f's{loc}' for loc in all_locations),
         buses=' '.join(f'b{bus}' for bus in buses),

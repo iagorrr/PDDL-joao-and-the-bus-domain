@@ -1,40 +1,41 @@
-(define (problem instance7) (:domain joao-and-the-bus)
+(define (problem instance-7) (:domain joao-and-the-bus)
 (:objects 
     s1 s2 s3 s4 - stop
     b1 b2 - bus
     p1 - person
 )
-(:init
-	(= (total-cost) 0)
 
-	(= (time-person) 0)
+(:init
+    (= (total-cost) 0)
+
+    (= (time-person) 4)
     (at p1 s1)
 
-	(= (road-length s1 s2 b1) 10)
-	(= (road-length s2 s3 b1) 10)
-	(= (road-length s3 s4 b1) 10)
-    (= (road-length s4 s1 b1) 10)
+    (= (road-length s1 s2 b1) 2)
+    (= (road-length s2 s3 b1) 4)
+    (= (road-length s3 s4 b1) 5)
+    (= (road-length s4 s1 b1) 4)
     (connect s1 s2 b1)
     (connect s2 s3 b1)
     (connect s3 s4 b1)
     (connect s4 s1 b1)
-	(= (time-bus b1) 0)
+    (= (time-bus b1) 0)
     (at b1 s1)
 
-	(= (road-length s1 s2 b2) 10)
-	(= (road-length s2 s3 b2) 20)
-	(= (road-length s3 s4 b2) 10)
-    (= (road-length s4 s1 b2) 10)
+    (= (road-length s1 s2 b2) 2)
+    (= (road-length s2 s3 b2) 8)
+    (= (road-length s3 s4 b2) 5)
+    (= (road-length s4 s1 b2) 4)
     (connect s1 s2 b2)
     (connect s2 s3 b2)
     (connect s3 s4 b2)
     (connect s4 s1 b2)
-	(= (time-bus b2) 0)
+    (= (time-bus b2) 0)
     (at b2 s1)
 )
 
 (:goal (and
-    (at p1 s4)
+    (at p1 s1)
     (forall (?b - bus)
         (not (in-bus ?b))
     )
