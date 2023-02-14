@@ -1,0 +1,6 @@
+digraph "instance-0" {
+	1 [label="1 s"]
+	2 [label="2 e"]
+	1 -> 2 [label="1:10" color=red weight=10]
+	2 -> 1 [label="1:10" color=red weight=10]
+}

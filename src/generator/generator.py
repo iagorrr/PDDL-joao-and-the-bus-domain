@@ -41,23 +41,12 @@ template = """(define (problem {problem_name}) (:domain joao-and-the-bus)
 
 """
 import graphviz
-import argparse
 
 def main():
-    parser = argparse.ArgumentParser(
-        prog='Generator',
-        description='Generates a valid instance of joao-and-the-bus pddl domain'
-    )
-    parser.add_argument('-o', '--output', default=1,
-                        help='Output filename that the instance will generate')
-    args = parser.parse_args()
-
-    with open(args.output, 'w') as f:
-        f.write(generate_problem())
-
+    generate_problem()
 
 def generate_problem() -> str:
-    colors = ['black', 'red', 'blue', 'yellow', 'green', 'fuchsia', 'crismon', 'aqua', 'orange', 'darkgreen', 'darkmagenta']
+    colors = ['black', 'red', 'blue', 'purple', 'yellow', 'fuchsia', 'crismon', 'aqua', 'orange', 'darkgreen', 'darkmagenta']
 
     problem_name = input()
 
