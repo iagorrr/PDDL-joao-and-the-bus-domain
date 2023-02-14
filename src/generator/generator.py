@@ -3,13 +3,13 @@ S -> Name of problem instance
 
 L1p L2p Tp -> Person's initial location, Person's target location, Person's initial time
 
-N M -> Number of buses, Number of connections
-
-<Next N lines>
+<Next N lines representing the buses information>
 B L1b Tb -> Bus Number, start location, bus start time
+** ENDS AT -1
 
-<Next M lines>
+<Next M lines representing the connections information>
 B L1c L2c W -> bus id , start location, final location, total time spent to go from location 1 to location 2
+** ENDS AT -1
 """
 
 
@@ -40,38 +40,65 @@ template = """(define (problem {problem_name}) (:domain joao-and-the-bus)
 )
 
 """
-
+import graphviz
+import argparse
 
 def main():
-    import argparse
-    
     parser = argparse.ArgumentParser(
         prog='Generator',
-        description='Generates a valid instance to the joao-and-the-bus pddl domain'
+        description='Generates a valid instance of joao-and-the-bus pddl domain'
     )
     parser.add_argument('-o', '--output', default=1,
                         help='Output filename that the instance will generate')
     args = parser.parse_args()
+
     with open(args.output, 'w') as f:
         f.write(generate_problem())
 
 
 def generate_problem() -> str:
+    colors = ['black', 'red', 'blue', 'yellow', 'green', 'fuchsia', 'crismon', 'aqua', 'orange', 'darkgreen', 'darkmagenta']
+
     problem_name = input()
+
     # start_location, end_location, start_time
     person = [*map(int, input().split())]
-    bus_count, connections_count = map(int, input().split())
 
     buses = {}
-    for _ in range(bus_count):
-        # bus, start_location, start_time
+    
+    stops = set()
+    graph = graphviz.Digraph(problem_name)
+
+    # person start and end location.
+    graph.node(str(person[0]), f'{person[0]} s')
+    graph.node(str(person[1]), f'{person[1]} e')
+    stops.add(person[1])
+    stops.add(person[0])
+    
+    
+    while(True):
         bus, *rest = map(int, input().split())
+        if bus == -1:
+            break
         buses[bus] = rest
 
     definitions = {}
-    for _ in range(connections_count):
+    while(True):
         # bus, location1, location2, weight
         bus, *rest = map(int, input().split())
+
+        if(bus == -1):
+            break
+        
+        if not rest[0] in stops:
+            graph.node(str(rest[0]), str(rest[0]))
+            stops.add(rest[0])
+        if not rest[1] in stops:
+            graph.node(str(rest[1]), str(rest[1]))
+            stops.add(rest[1])
+        
+        graph.edge(str(rest[0]), str(rest[1]), label=f'{bus}:{rest[2]}', weight=str(rest[2]), color=colors[bus])
+
         if not bus in definitions:
             definitions[bus] = []
         definitions[bus].append(rest)
@@ -82,6 +109,8 @@ def generate_problem() -> str:
         for connection in connections
         for location in connection[:2]
     }
+    
+    graph.render(outfile=f'../../instances/{problem_name}.pdf')
 
     return template.format(
         problem_name=problem_name,
@@ -94,7 +123,6 @@ def generate_problem() -> str:
             format_definitions(definitions, buses)
         )
     )
-
 
 def format_definitions(definitions: dict, buses: dict) -> list[str]:
     ans = []
