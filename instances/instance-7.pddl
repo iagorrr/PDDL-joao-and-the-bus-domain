@@ -8,7 +8,7 @@
 (:init
     (= (total-cost) 0)
 
-    (= (time-person) 4)
+    (= (time-person) 0)
     (at p1 s1)
 
     (= (road-length s1 s2 b1) 2)
@@ -35,7 +35,7 @@
 )
 
 (:goal (and
-    (at p1 s1)
+    (at p1 s4)
     (forall (?b - bus)
         (not (in-bus ?b))
     )
